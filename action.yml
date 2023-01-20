@@ -3,5 +3,3 @@ description: 'Release the bounty to the proper user'
 runs:
   using: 'node16'
   main: index.js
-  env:
-    KEY: ${{ secrets.DEV_MILL_KEY }}
