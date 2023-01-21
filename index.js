@@ -14,7 +14,7 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
     const payeeUsername = payload.pull_request.merged_by.login;
     const repoName = payload.repository?.name;
 
-    const issueNumber = Number.parseInt(payload.pull_request.body?.match(/#(\d+)/)[1]);
+    const issueNumber = Number.parseInt(payload.pull_request.body?.match(/DevMill Bounty: #(\d+)/)[1]);
 
     // console.log(JSON.stringify(payload, undefined, 2));
 
@@ -36,12 +36,17 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
                 const program = await anchor.Program.at(programId, provider);
 
                 const [userPda, _] = PublicKey.findProgramAddressSync([anchor.utils.bytes.utf8.encode('user-account'), address.toBuffer()], program.programId);
-                const userAccount = program.account.userAccount.fetchNullable(userPda);
+                const userAccount = await program.account.userAccount.fetchNullable(userPda);
+                
+                const [pda, __] = PublicKey.findProgramAddressSync(
+                    [anchor.utils.bytes.utf8.encode(`bounty${issueNumber}${repoName}`)],
+                    program.programId
+                );
 
                 await program.methods
                     .releaseBounty()
                     .accounts({
-                        bounty: PublicKey.findProgramAddressSync([`bounty${issueNumber}${repoName}`], programId)[1],
+                        bounty: pda,
                         poster: wallet.publickKey,
                         recipient: address,
                         recipientAccount: userAccount

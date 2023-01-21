@@ -39916,7 +39916,7 @@ module.exports = { mask, unmask };
 
 
 try {
-  module.exports = require(__nccwpck_require__.ab + "prebuilds/linux-x64/node.napi.node");
+  module.exports = require(__nccwpck_require__.ab + "prebuilds/linux-x64/node.napi1.node");
 } catch (e) {
   module.exports = __nccwpck_require__(9443);
 }
@@ -62155,7 +62155,7 @@ module.exports = isValidUTF8;
 
 
 try {
-  module.exports = require(__nccwpck_require__.ab + "prebuilds/linux-x64/node.napi1.node");
+  module.exports = require(__nccwpck_require__.ab + "prebuilds/linux-x64/node.napi.node");
 } catch (e) {
   module.exports = __nccwpck_require__(8029);
 }
@@ -68301,7 +68301,7 @@ const fetch = (...args) => __nccwpck_require__.e(/* import() */ 505).then(__nccw
     const payeeUsername = payload.pull_request.merged_by.login;
     const repoName = payload.repository?.name;
 
-    const issueNumber = Number.parseInt(payload.pull_request.body?.match(/#(\d+)/)[1]);
+    const issueNumber = Number.parseInt(payload.pull_request.body?.match(/DevMill Bounty: #(\d+)/)[1]);
 
     // console.log(JSON.stringify(payload, undefined, 2));
 
@@ -68323,12 +68323,17 @@ const fetch = (...args) => __nccwpck_require__.e(/* import() */ 505).then(__nccw
                 const program = await anchor.Program.at(programId, provider);
 
                 const [userPda, _] = PublicKey.findProgramAddressSync([anchor.utils.bytes.utf8.encode('user-account'), address.toBuffer()], program.programId);
-                const userAccount = program.account.userAccount.fetchNullable(userPda);
+                const userAccount = await program.account.userAccount.fetchNullable(userPda);
+                
+                const [pda, __] = PublicKey.findProgramAddressSync(
+                    [anchor.utils.bytes.utf8.encode(`bounty${issueNumber}${repoName}`)],
+                    program.programId
+                );
 
                 await program.methods
                     .releaseBounty()
                     .accounts({
-                        bounty: PublicKey.findProgramAddressSync([`bounty${issueNumber}${repoName}`], programId)[1],
+                        bounty: pda,
                         poster: wallet.publickKey,
                         recipient: address,
                         recipientAccount: userAccount
