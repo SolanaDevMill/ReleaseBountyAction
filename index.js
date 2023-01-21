@@ -1,10 +1,10 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-// import * as anchor from "@project-serum/anchor";
-// import NodeWallet from "@project-serum/anchor/dist/cjs/nodewallet";
 const { clusterApiUrl, Connection, Keypair, PublicKey } = require("@solana/web3.js");
 const anchor = require('@project-serum/anchor');
-const {NodeWallet} = requre('@project-serum/anchor/dist/cjs/nodewallet');
+const { bs58 } = require("@project-serum/anchor/dist/cjs/utils/bytes");
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
 
 
 (async () => {
@@ -13,6 +13,8 @@ const {NodeWallet} = requre('@project-serum/anchor/dist/cjs/nodewallet');
     const payeeUsername = payload.pull_request.merged_by.login;
     const issueNumber = payload.pull_request._links.issue.number;
     const repoName = payload.repository?.name;
+
+    console.log(JSON.stringify(payload, undefined, 2));
 
     try {
         fetch(`https://raw.githubusercontent.com/${payeeUsername}/${payeeUsername}/main/README.md`)
@@ -26,12 +28,12 @@ const {NodeWallet} = requre('@project-serum/anchor/dist/cjs/nodewallet');
                 const address = new PublicKey(match[1]);
                 const programId = "FAuRwCnsvpMHVBDcL47SGM5XSC7oY5u5u9VU3GDqWaZm";
                 let connection = new Connection(clusterApiUrl("devnet"));
-                const wallet = new NodeWallet(Keypair.fromSecretKey(TexEncoder().encode(pk)));
+                const wallet = new anchor.Wallet(Keypair.fromSecretKey(bs58.decode(pk)));
                 const provider = new anchor.AnchorProvider(connection, wallet, anchor.AnchorProvider.defaultOptions());
 
-                const program = await new anchor.Program.at(programId, provider);
+                const program = await anchor.Program.at(programId, provider);
 
-                const [userPda, _] = PublicKey.findProgramAddressSync([anchor.utils.bytes.encode('user-account'), address.toBuffer()], program.programId);
+                const [userPda, _] = PublicKey.findProgramAddressSync([anchor.utils.bytes.utf8.encode('user-account'), address.toBuffer()], program.programId);
                 const userAccount = program.account.userAccount.fetchNullable(userPda);
 
                 await program.methods
