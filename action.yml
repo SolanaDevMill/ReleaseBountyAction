@@ -1,5 +1,11 @@
 name: 'Release Bounty'
 description: 'Release the bounty to the proper user'
+
+inputs:
+  wallet-key:
+    required: true
+    description: 'secret key of the wallet used to create bounty'
+
 runs:
   using: 'node16'
-  main: index.js
+  main: dist/index.js
