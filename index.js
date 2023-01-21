@@ -5,16 +5,18 @@ const anchor = require('@project-serum/anchor');
 const { bs58 } = require("@project-serum/anchor/dist/cjs/utils/bytes");
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
+/// TODO gonna have to just parse the issue from the description
 
 
 (async () => {
     const pk = core.getInput('wallet-key');
     const payload = github.context.payload;
     const payeeUsername = payload.pull_request.merged_by.login;
-    const issueNumber = payload.pull_request._links.issue.number;
     const repoName = payload.repository?.name;
 
-    console.log(JSON.stringify(payload, undefined, 2));
+    const issueNumber = Number.parseInt(payload.pull_request.body?.match(/#(\d+)/)[1]);
+
+    // console.log(JSON.stringify(payload, undefined, 2));
 
     try {
         fetch(`https://raw.githubusercontent.com/${payeeUsername}/${payeeUsername}/main/README.md`)

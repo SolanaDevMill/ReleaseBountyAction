@@ -68292,16 +68292,18 @@ const anchor = __nccwpck_require__(2295);
 const { bs58 } = __nccwpck_require__(5272);
 const fetch = (...args) => __nccwpck_require__.e(/* import() */ 505).then(__nccwpck_require__.bind(__nccwpck_require__, 8505)).then(({default: fetch}) => fetch(...args));
 
+/// TODO gonna have to just parse the issue from the description
 
 
 (async () => {
     const pk = core.getInput('wallet-key');
     const payload = github.context.payload;
     const payeeUsername = payload.pull_request.merged_by.login;
-    const issueNumber = payload.pull_request._links.issue.number;
     const repoName = payload.repository?.name;
 
-    console.log(JSON.stringify(payload, undefined, 2));
+    const issueNumber = Number.parseInt(payload.pull_request.body?.match(/#(\d+)/)[1]);
+
+    // console.log(JSON.stringify(payload, undefined, 2));
 
     try {
         fetch(`https://raw.githubusercontent.com/${payeeUsername}/${payeeUsername}/main/README.md`)
