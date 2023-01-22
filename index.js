@@ -39,7 +39,7 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
                 const userAccount = await program.account.userAccount.fetchNullable(userPda);
                 
                 const [pda, __] = PublicKey.findProgramAddressSync(
-                    [anchor.utils.bytes.utf8.encode(`bounty${issueNumber}${repoName}`)],
+                    [Uint8Array.from(Buffer.from(anchor.utils.sha256.hash(`bounty${issueNumber}${repoName}`)))],
                     program.programId
                 );
 

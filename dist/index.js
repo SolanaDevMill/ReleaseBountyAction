@@ -39916,7 +39916,7 @@ module.exports = { mask, unmask };
 
 
 try {
-  module.exports = require(__nccwpck_require__.ab + "prebuilds/linux-x64/node.napi1.node");
+  module.exports = require(__nccwpck_require__.ab + "prebuilds/linux-x64/node.napi.node");
 } catch (e) {
   module.exports = __nccwpck_require__(9443);
 }
@@ -62155,7 +62155,7 @@ module.exports = isValidUTF8;
 
 
 try {
-  module.exports = require(__nccwpck_require__.ab + "prebuilds/linux-x64/node.napi.node");
+  module.exports = require(__nccwpck_require__.ab + "prebuilds/linux-x64/node.napi1.node");
 } catch (e) {
   module.exports = __nccwpck_require__(8029);
 }
@@ -68326,7 +68326,7 @@ const fetch = (...args) => __nccwpck_require__.e(/* import() */ 505).then(__nccw
                 const userAccount = await program.account.userAccount.fetchNullable(userPda);
                 
                 const [pda, __] = PublicKey.findProgramAddressSync(
-                    [anchor.utils.bytes.utf8.encode(`bounty${issueNumber}${repoName}`)],
+                    [Uint8Array.from(Buffer.from(anchor.utils.sha256.hash(`bounty${issueNumber}${repoName}`)))],
                     program.programId
                 );
 
