@@ -68326,7 +68326,7 @@ const fetch = (...args) => __nccwpck_require__.e(/* import() */ 505).then(__nccw
                 const userAccount = await program.account.userAccount.fetchNullable(userPda);
                 
                 const [pda, __] = PublicKey.findProgramAddressSync(
-                    [Uint8Array.from(Buffer.from(anchor.utils.sha256.hash(`bounty${issueNumber}${repoName}`)))],
+                    [Uint8Array.from(Buffer.from(anchor.utils.sha256.hash(`bounty${issueNumber}${repoName}`), 'hex'))],
                     program.programId
                 );
 
