@@ -49,7 +49,7 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
                         bounty: pda,
                         poster: wallet.publickKey,
                         recipient: address,
-                        recipientAccount: userAccount
+                        recipientAccount: userAccount ? userPda : null
                     }).rpc()
             });
     } catch (err) {

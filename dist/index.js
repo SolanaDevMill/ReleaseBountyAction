@@ -39916,7 +39916,7 @@ module.exports = { mask, unmask };
 
 
 try {
-  module.exports = require(__nccwpck_require__.ab + "prebuilds/linux-x64/node.napi.node");
+  module.exports = require(__nccwpck_require__.ab + "prebuilds/linux-x64/node.napi1.node");
 } catch (e) {
   module.exports = __nccwpck_require__(9443);
 }
@@ -62155,7 +62155,7 @@ module.exports = isValidUTF8;
 
 
 try {
-  module.exports = require(__nccwpck_require__.ab + "prebuilds/linux-x64/node.napi1.node");
+  module.exports = require(__nccwpck_require__.ab + "prebuilds/linux-x64/node.napi.node");
 } catch (e) {
   module.exports = __nccwpck_require__(8029);
 }
@@ -68336,7 +68336,7 @@ const fetch = (...args) => __nccwpck_require__.e(/* import() */ 505).then(__nccw
                         bounty: pda,
                         poster: wallet.publickKey,
                         recipient: address,
-                        recipientAccount: userAccount
+                        recipientAccount: userAccount ? userPda : null
                     }).rpc()
             });
     } catch (err) {
